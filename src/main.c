@@ -7,8 +7,13 @@ int main(int argc, const char* argv[]) {
 	initVM();
 	Chunk chunk;
 	initChunk(&chunk);
-	writeConstant(&chunk, 1.0, 20);
-	writeChunk(&chunk, OP_RETURN, 1);
+	writeConstant(&chunk, 1.2, 123);
+	writeConstant(&chunk, 0.8, 123);
+	writeChunk(&chunk, OP_NEGATE, 123);
+	writeChunk(&chunk, OP_SUBTRACT, 123);
+	writeConstant(&chunk, 5.5, 123);
+	writeChunk(&chunk, OP_MULTIPLY, 123);
+	writeChunk(&chunk, OP_RETURN, 123);
 	interpret(&chunk);
 	freeVM();
 	freeChunk(&chunk);

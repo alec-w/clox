@@ -23,7 +23,7 @@ CFLAGS = -I$(INCDIR)
 # Source files
 SRCS := $(wildcard $(SRCDIR)/*.c)
 
-COMPILE.c = $(CC) $(DEPFLAGS) $(CFLAGS) $(TARGET_ARCH) -c
+COMPILE.c = $(CC) $(DEPFLAGS) $(CFLAGS) $(TARGET_ARCH) -c -g
 POSTCOMPILE = mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d && touch $@
 LINK.c = $(CC) $(CFLAGS) $(LDFLAGS)
 

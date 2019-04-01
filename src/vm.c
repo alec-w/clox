@@ -31,10 +31,13 @@ static void runtimeError(const char* format, ...) {
 void initVM() {
 	resetStack();
 	vm.objects = NULL;
+	initTable(&vm.globals);
 	initTable(&vm.strings);
 }
 
 void freeVM() {
+	freeTable(&vm.globals);
+	freeTable(&vm.strings);
 	freeObjects();
 }
 
@@ -80,6 +83,7 @@ static InterpretResult run() {
 		(READ_BYTE())\
 	]\
 )
+#define READ_STRING() AS_STRING(READ_CONSTANT())
 #define BINARY_OP(valueType, op) \
 do { \
 	if (!IS_NUMBER(peek(0)) || !IS_NUMBER(peek(1))) { \
@@ -92,7 +96,7 @@ do { \
 } while (false)
 
 	for(;;) {
-	#ifdef DEBUG_TRACE_EXECUTION
+	#ifdef DuBUG_TRACE_EXECUTION
 		printf("          ");
 		for (Value* slot = vm.stack; slot < vm.stackTop; slot++) {
 			printf("[ ");
@@ -117,6 +121,13 @@ do { \
 			case OP_NIL: push(NIL_VAL); break;
 			case OP_TRUE: push(BOOL_VAL(true)); break;
 			case OP_FALSE: push(BOOL_VAL(false)); break;
+			case OP_POP: pop(); break;
+			case OP_DEFINE_GLOBAL: {
+				ObjString* name = READ_STRING();
+				tableSet(&vm.globals, name, peek(0));
+				pop();
+				break;
+			}
 			case OP_EQUAL: {
 				Value b = pop();
 				Value a = pop();
@@ -151,14 +162,19 @@ do { \
 
 				push(NUMBER_VAL(-AS_NUMBER(pop())));
 				break;
-			case OP_RETURN:
+			case OP_PRINT: {
 				printValue(pop());
 				printf("\n");
+				break;
+			}
+			case OP_RETURN:
+				// Exit the interpreter.
 				return INTERPRET_OK;
 		}
 	}
 
 #undef BINARY_OP
+#undef READ_STRING
 #undef READ_LONG_CONSTANT
 #undef READ_CONSTANT
 #undef READ_BYTE

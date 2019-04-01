@@ -10,6 +10,8 @@ typedef enum {
 	OP_NIL,
 	OP_TRUE,
 	OP_FALSE,
+	OP_POP,
+	OP_DEFINE_GLOBAL,
 	OP_EQUAL,
 	OP_GREATER,
 	OP_LESS,
@@ -19,6 +21,7 @@ typedef enum {
 	OP_DIVIDE,
 	OP_NOT,
 	OP_NEGATE,
+	OP_PRINT,
 	OP_RETURN,
 } OpCode;
 
@@ -35,6 +38,7 @@ typedef struct {
 void initChunk(Chunk* chunk);
 void freeChunk(Chunk* chunk);
 void writeChunk(Chunk* chunk, uint8_t byte, int line);
+uint32_t addConstant(Chunk* chunk, Value value);
 void writeConstant(Chunk* chunk, Value value, int line);
 int getLine(Chunk* chunk, int offset);
 

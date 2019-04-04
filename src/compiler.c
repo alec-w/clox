@@ -134,6 +134,7 @@ static void statement();
 static void expressionStatement();
 static ParseRule* getRule(TokenType type);
 static void parsePrecedence(Precedence precendence);
+static uint32_t identifierConstant(Token* name);
 
 static void binary() {
 	// Remember the operator.
@@ -186,6 +187,16 @@ static void string() {
 	emitConstant(OBJ_VAL(copyString(parser.previous.start + 1, parser.previous.length - 2)));
 }
 
+static void namedVariable(Token name) {
+	uint32_t arg = identifierConstant(&name);
+
+	emitBytes(OP_GET_GLOBAL, (uint8_t)arg);
+}
+
+static void variable() {
+	namedVariable(parser.previous);
+}
+
 static void unary() {
 	TokenType operatorType = parser.previous.type;
 
@@ -220,7 +231,7 @@ ParseRule rules[] = {
 	{ NULL, binary, PREC_COMPARISON }, // TOKEN_GREATER_EQUAL
 	{ NULL, binary, PREC_COMPARISON }, // TOKEN_LESS
 	{ NULL, binary, PREC_COMPARISON }, // TOKEN_LESS_EQUAL
-	{ NULL, NULL, PREC_NONE },         // TOKEN_IDENTIFIER
+	{ variable, NULL, PREC_NONE },     // TOKEN_IDENTIFIER
 	{ string, NULL, PREC_NONE },       // TOKEN_STRING
 	{ number, NULL, PREC_NONE },       // TOKEN_NUMBER
 	{ NULL, NULL, PREC_AND },          // TOKEN_AND

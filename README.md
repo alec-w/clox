@@ -6,7 +6,7 @@ c based byte-code VM for the lox language
 
 Compile:
 ```
-gcc -Wall chunk.c debug.c main.c memory.c value.c -o clox
+gcc -Wall chunk.c debug.c main.c memory.c value.c line.c -o clox
 ```
 Run:
 ```

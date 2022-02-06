@@ -31,14 +31,3 @@ void freeLineArray(LineArray* array) {
     initLineArray(array);
 }
 
-int getLine(LineArray* array, int index) {
-    int runningIndex = 0;
-    for (int i = 0; i < array->count; i++) {
-        runningIndex += array->lines[i].count;
-        if (runningIndex >= index) {
-            return array->lines[i].line;
-        }
-    }
-    return 0;
-}
-

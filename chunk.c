@@ -48,3 +48,15 @@ void writeConstant(Chunk* chunk, Value value, int line) {
     }
 }
 
+int getLine(Chunk* chunk, int index) {
+    int runningIndex = 0;
+    for (int i = 0; i < chunk->lines.count; i++) {
+        runningIndex += chunk->lines.lines[i].count;
+        if (runningIndex > index) {
+            return chunk->lines.lines[i].line;
+        }
+    }
+
+    return 0;
+}
+

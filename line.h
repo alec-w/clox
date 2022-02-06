@@ -17,6 +17,5 @@ typedef struct {
 void initLineArray(LineArray* array);
 void writeLineArray(LineArray* array, int line);
 void freeLineArray(LineArray* array);
-int getLine(LineArray* array, int index);
 
 #endif

@@ -7,8 +7,11 @@
 void disassembleChunk(Chunk* chunk, const char* name) {
     printf("== %s ==\n", name);
 
+    int previousOffset = 0;
     for (int offset = 0; offset < chunk->count;) {
-        offset = disassembleInstruction(chunk, offset);
+        int newOffset = disassembleInstruction(chunk, offset, previousOffset);
+        previousOffset = offset;
+        offset = newOffset;
     }
 }
 
@@ -33,10 +36,10 @@ static int simpleInstruction(const char* name, int offset) {
     return offset + 1;
 }
 
-int disassembleInstruction(Chunk* chunk, int offset) {
+int disassembleInstruction(Chunk* chunk, int offset, int previousOffset) {
     printf("%04d ", offset);
-    int line = getLine(&chunk->lines, offset);
-    if (offset > 0 && line == getLine(&chunk->lines, offset - 1)) {
+    int line = getLine(chunk, offset);
+    if (offset > 0 && line == getLine(chunk, previousOffset)) {
         printf("   | ");
     } else {
         printf("%4d ", line);
